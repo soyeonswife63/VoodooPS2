@@ -533,7 +533,7 @@ bool ApplePS2Controller::start(IOService * provider)
   //
   
   _muxPresent = false;
-  _nubsCount = 1;
+  _nubsCount = kPS2AuxMaxIdx;
 
   
   //
