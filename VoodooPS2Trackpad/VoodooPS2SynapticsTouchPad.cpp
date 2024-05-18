@@ -164,11 +164,11 @@ ApplePS2SynapticsTouchPad* ApplePS2SynapticsTouchPad::probe(IOService * provider
       OSSafeReleaseNULL(config);
     }
 
-    bool success = getTouchPadData(SYNAPTICS_IDENTIFY_QUERY, reinterpret_cast<uint8_t*>(&_identity));
-    if (!success)
+    int success = getTouchPadData(SYNAPTICS_IDENTIFY_QUERY, reinterpret_cast<uint8_t*>(&_identity));
+    if (success != -1)
     {
-        IOLog("VoodooPS2Trackpad: Identify TouchPad command failed\n");
-        return 0;
+        IOLog("VoodooPS2Trackpad: Identify TouchPad command failed (expected len 14, got %d), continuing anyway\n", success);
+        //return 0;
     }
     
     INFO_LOG("VoodooPS2Trackpad: Identity = { 0x%x.%x, constant: %x }\n",
@@ -1556,7 +1556,7 @@ bool ApplePS2SynapticsTouchPad::getTouchPadStatus(  UInt8 buf3[] )
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-bool ApplePS2SynapticsTouchPad::getTouchPadData(UInt8 dataSelector, UInt8 buf3[])
+int ApplePS2SynapticsTouchPad::getTouchPadData(UInt8 dataSelector, UInt8 buf3[])
 {
     TPS2Request<14> request;
 
@@ -1600,13 +1600,13 @@ bool ApplePS2SynapticsTouchPad::getTouchPadData(UInt8 dataSelector, UInt8 buf3[]
     assert(request.commandsCount <= countof(request.commands));
     _device->submitRequestAndBlock(&request);
     if (14 != request.commandsCount)
-        return false;
+        return request.commandsCount;
     
     // store results
     buf3[0] = request.commands[10].inOrOut;
     buf3[1] = request.commands[11].inOrOut;
     buf3[2] = request.commands[12].inOrOut;
-    return true;
+    return -1;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
