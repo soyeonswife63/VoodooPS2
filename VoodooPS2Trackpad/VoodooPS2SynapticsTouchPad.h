@@ -342,7 +342,7 @@ private:
     // the best would be { return x > xmax/2 && y < ymax/4; }
 
     virtual void   setTouchPadEnable( bool enable );
-    virtual bool   getTouchPadData( UInt8 dataSelector, UInt8 buf3[] );
+    virtual int   getTouchPadData( UInt8 dataSelector, UInt8 buf3[] );
     virtual bool   getTouchPadStatus(  UInt8 buf3[] );
 	virtual PS2InterruptResult interruptOccurred(UInt8 data);
     virtual void packetReady();
