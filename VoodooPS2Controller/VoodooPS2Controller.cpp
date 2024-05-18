@@ -1147,7 +1147,7 @@ void ApplePS2Controller::processRequest(PS2Request * request)
       // 2. kPS2C_ReadDataPortAndCompare( kSC_Acknowledge )
       //
 
-      case kPS2C_SendCommandAndCompareAck:
+      case kPS2C_SendMouseCommandAndCompareAck:
         if (devicePort >= kPS2AuxIdx) {
           if (_muxPresent) {
             writeCommandPort(kCP_TransmitToMuxedMouse + (devicePort - kPS2AuxIdx));

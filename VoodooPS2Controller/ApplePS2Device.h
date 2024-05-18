@@ -278,7 +278,7 @@ enum PS2CommandEnum
   kPS2C_ReadDataPort,
   kPS2C_ReadDataPortAndCompare,
   kPS2C_WriteDataPort,
-  kPS2C_SendCommandAndCompareAck,
+  kPS2C_SendMouseCommandAndCompareAck,
   kPS2C_FlushDataPort,
   kPS2C_SleepMS,
   kPS2C_ModifyCommandByte,

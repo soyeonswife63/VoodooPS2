@@ -204,9 +204,9 @@ void ApplePS2SynapticsTouchPad::doHardwareReset()
 {
     TPS2Request<> request;
     int i = 0;
-    request.commands[i].command = kPS2C_SendCommandAndCompareAck;
+    request.commands[i].command = kPS2C_SendMouseCommandAndCompareAck;
     request.commands[i++].inOrOut = kDP_SetDefaultsAndDisable;     // F5
-    request.commands[i].command = kPS2C_SendCommandAndCompareAck;
+    request.commands[i].command = kPS2C_SendMouseCommandAndCompareAck;
     request.commands[i++].inOrOut = kDP_SetDefaultsAndDisable;     // F5
     request.commands[i].command = kPS2C_WriteDataPort;
     request.commands[i++].inOrOut = kDP_Reset;                     // FF
@@ -1518,7 +1518,7 @@ void ApplePS2SynapticsTouchPad::setTouchPadEnable( bool enable )
     
     // (mouse enable/disable command)
     TPS2Request<1> request;
-    request.commands[0].command = kPS2C_SendCommandAndCompareAck;
+    request.commands[0].command = kPS2C_SendMouseCommandAndCompareAck;
     request.commands[0].inOrOut = enable ? kDP_Enable : kDP_SetDefaultsAndDisable;
     request.commandsCount = 1;
     assert(request.commandsCount <= countof(request.commands));
@@ -1530,9 +1530,9 @@ void ApplePS2SynapticsTouchPad::setTouchPadEnable( bool enable )
 bool ApplePS2SynapticsTouchPad::getTouchPadStatus(  UInt8 buf3[] )
 {
     TPS2Request<6> request;
-    request.commands[0].command  = kPS2C_SendCommandAndCompareAck;
+    request.commands[0].command  = kPS2C_SendMouseCommandAndCompareAck;
     request.commands[0].inOrOut  = kDP_SetDefaultsAndDisable;
-    request.commands[1].command  = kPS2C_SendCommandAndCompareAck;
+    request.commands[1].command  = kPS2C_SendMouseCommandAndCompareAck;
     request.commands[1].inOrOut  = kDP_GetMouseInformation;
     request.commands[2].command = kPS2C_ReadDataPort;
     request.commands[2].inOrOut = 0;
@@ -1540,7 +1540,7 @@ bool ApplePS2SynapticsTouchPad::getTouchPadStatus(  UInt8 buf3[] )
     request.commands[3].inOrOut = 0;
     request.commands[4].command = kPS2C_ReadDataPort;
     request.commands[4].inOrOut = 0;
-    request.commands[5].command = kPS2C_SendCommandAndCompareAck;
+    request.commands[5].command = kPS2C_SendMouseCommandAndCompareAck;
     request.commands[5].inOrOut = kDP_SetDefaultsAndDisable;
     request.commandsCount = 6;
     assert(request.commandsCount <= countof(request.commands));
@@ -1561,32 +1561,32 @@ int ApplePS2SynapticsTouchPad::getTouchPadData(UInt8 dataSelector, UInt8 buf3[])
     TPS2Request<14> request;
 
     // Disable stream mode before the command sequence.
-    request.commands[0].command  = kPS2C_SendCommandAndCompareAck;
+    request.commands[0].command  = kPS2C_SendMouseCommandAndCompareAck;
     request.commands[0].inOrOut  = kDP_SetDefaultsAndDisable;
 
     // 4 set resolution commands, each encode 2 data bits.
-    request.commands[1].command  = kPS2C_SendCommandAndCompareAck;
+    request.commands[1].command  = kPS2C_SendMouseCommandAndCompareAck;
     request.commands[1].inOrOut  = kDP_SetMouseResolution;
-    request.commands[2].command  = kPS2C_SendCommandAndCompareAck;
+    request.commands[2].command  = kPS2C_SendMouseCommandAndCompareAck;
     request.commands[2].inOrOut  = (dataSelector >> 6) & 0x3;
 
-    request.commands[3].command  = kPS2C_SendCommandAndCompareAck;
+    request.commands[3].command  = kPS2C_SendMouseCommandAndCompareAck;
     request.commands[3].inOrOut  = kDP_SetMouseResolution;
-    request.commands[4].command  = kPS2C_SendCommandAndCompareAck;
+    request.commands[4].command  = kPS2C_SendMouseCommandAndCompareAck;
     request.commands[4].inOrOut  = (dataSelector >> 4) & 0x3;
 
-    request.commands[5].command  = kPS2C_SendCommandAndCompareAck;
+    request.commands[5].command  = kPS2C_SendMouseCommandAndCompareAck;
     request.commands[5].inOrOut  = kDP_SetMouseResolution;
-    request.commands[6].command  = kPS2C_SendCommandAndCompareAck;
+    request.commands[6].command  = kPS2C_SendMouseCommandAndCompareAck;
     request.commands[6].inOrOut  = (dataSelector >> 2) & 0x3;
 
-    request.commands[7].command  = kPS2C_SendCommandAndCompareAck;
+    request.commands[7].command  = kPS2C_SendMouseCommandAndCompareAck;
     request.commands[7].inOrOut  = kDP_SetMouseResolution;
-    request.commands[8].command  = kPS2C_SendCommandAndCompareAck;
+    request.commands[8].command  = kPS2C_SendMouseCommandAndCompareAck;
     request.commands[8].inOrOut  = (dataSelector >> 0) & 0x3;
 
     // Read response bytes.
-    request.commands[9].command  = kPS2C_SendCommandAndCompareAck;
+    request.commands[9].command  = kPS2C_SendMouseCommandAndCompareAck;
     request.commands[9].inOrOut  = kDP_GetMouseInformation;
     request.commands[10].command = kPS2C_ReadDataPort;
     request.commands[10].inOrOut = 0;
@@ -1594,7 +1594,7 @@ int ApplePS2SynapticsTouchPad::getTouchPadData(UInt8 dataSelector, UInt8 buf3[])
     request.commands[11].inOrOut = 0;
     request.commands[12].command = kPS2C_ReadDataPort;
     request.commands[12].inOrOut = 0;
-    request.commands[13].command = kPS2C_SendCommandAndCompareAck;
+    request.commands[13].command = kPS2C_SendMouseCommandAndCompareAck;
     request.commands[13].inOrOut = kDP_SetDefaultsAndDisable;
     request.commandsCount = 14;
     assert(request.commandsCount <= countof(request.commands));
@@ -1711,7 +1711,7 @@ bool ApplePS2SynapticsTouchPad::enterAdvancedGestureMode()
     
     // all these commands are "send mouse" and "compare ack"
     for (int x = 0; x < i; x++)
-        request.commands[x].command = kPS2C_SendCommandAndCompareAck;
+        request.commands[x].command = kPS2C_SendMouseCommandAndCompareAck;
     request.commandsCount = i;
     assert(request.commandsCount <= countof(request.commands));
     _device->submitRequestAndBlock(&request);
@@ -1766,7 +1766,7 @@ bool ApplePS2SynapticsTouchPad::setModeByte(bool sleep)
 
     // all these commands are "send mouse" and "compare ack"
     for (int x = 0; x < i; x++)
-        request.commands[x].command = kPS2C_SendCommandAndCompareAck;
+        request.commands[x].command = kPS2C_SendMouseCommandAndCompareAck;
     request.commandsCount = i;
     assert(request.commandsCount <= countof(request.commands));
     _device->submitRequestAndBlock(&request);
@@ -2194,7 +2194,7 @@ bool ApplePS2SynapticsTouchPad::setTouchpadLED(UInt8 touchLED)
     
     // all these commands are "send mouse" and "compare ack"
     for (int x = 0; x < request.commandsCount; x++)
-        request.commands[x].command = kPS2C_SendCommandAndCompareAck;
+        request.commands[x].command = kPS2C_SendMouseCommandAndCompareAck;
     _device->submitRequestAndBlock(&request);
     
     return 12 == request.commandsCount;
