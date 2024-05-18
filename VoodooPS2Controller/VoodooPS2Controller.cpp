@@ -532,13 +532,9 @@ bool ApplePS2Controller::start(IOService * provider)
   // This creates 4 Aux ports which pointing devices may connect to.
   //
   
-  if (_kbdOnly) {
-    _muxPresent = false;
-    _nubsCount = 1;
-  } else {
-    _muxPresent = setMuxMode(true);
-    _nubsCount = _muxPresent ? kPS2MuxMaxIdx : kPS2AuxMaxIdx;
-  }
+  _muxPresent = false;
+  _nubsCount = 1;
+
   
   //
   // Reset attached devices and clear out garbage in the controller's input streams,
